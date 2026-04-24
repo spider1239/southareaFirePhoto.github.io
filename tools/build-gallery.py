@@ -55,6 +55,10 @@ def drive_view_url(file_id: str) -> str:
     return f"https://drive.google.com/uc?export=view&id={file_id}"
 
 
+def drive_embed_url(file_id: str, size: str = "w4000") -> str:
+    return f"https://lh3.googleusercontent.com/d/{file_id}={size}"
+
+
 def drive_download_url(file_id: str) -> str:
     return f"https://drive.google.com/uc?export=download&id={file_id}"
 
@@ -100,9 +104,9 @@ def build_manifest() -> dict:
                 preview_asset_path = relative_site_path(thumbnail_path)
                 preview_src = versioned_asset_path(preview_asset_path, thumbnail_path)
             else:
-                preview_src = cache_busted_asset_path if cache_busted_asset_path else drive_view_url(drive_file_id)
+                preview_src = cache_busted_asset_path if cache_busted_asset_path else drive_embed_url(drive_file_id, "w1600")
 
-            src = drive_view_url(drive_file_id) if drive_file_id else cache_busted_asset_path
+            src = drive_embed_url(drive_file_id, "w4000") if drive_file_id else cache_busted_asset_path
             download = drive_download_url(drive_file_id) if drive_file_id else cache_busted_asset_path
             share_url = drive_share_url(drive_file_id) if drive_file_id else cache_busted_asset_path
 

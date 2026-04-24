@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>成品相簿</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Outfit:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css?v=20260425b" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <aside class="side-nav" aria-label="照片分類導覽">
+        <div class="side-nav-panel">
+          <p class="side-nav-eyebrow">Quick Jump</p>
+          <h2 class="side-nav-title">分類列表</h2>
+          <nav id="category-nav" class="category-nav"></nav>
+        </div>
+      </aside>
+
+      <div class="content-shell">
+        <header class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Photo Gallery</p>
+            <h1 id="gallery-title">成品相簿</h1>
+            <p class="hero-text" id="gallery-summary">正在載入照片分類...</p>
+          </div>
+        </header>
+        <main id="gallery-root" class="gallery-root" aria-live="polite"></main>
+      </div>
+    </div>
+
+    <template id="category-template">
+      <section class="category-section">
+        <div class="category-header">
+          <div>
+            <h2 class="category-title"></h2>
+            <p class="category-count"></p>
+          </div>
+        </div>
+        <div class="photo-grid"></div>
+        <p class="category-empty" hidden>目前尚未放入照片。</p>
+      </section>
+    </template>
+
+    <template id="card-template">
+      <article class="photo-card">
+        <button class="photo-button" type="button">
+          <img class="photo-image" alt="" loading="lazy" />
+        </button>
+        <div class="photo-meta">
+          <p class="photo-name"></p>
+          <div class="photo-actions">
+            <a class="action-button" data-role="download" download>下載</a>
+            <button class="action-button secondary" type="button" data-role="share">分享</button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <dialog id="lightbox" class="lightbox">
+      <form method="dialog" class="lightbox-panel">
+        <button class="lightbox-close" type="submit" aria-label="關閉">×</button>
+        <img id="lightbox-image" class="lightbox-image" alt="" />
+        <div class="lightbox-footer">
+          <div>
+            <p id="lightbox-title" class="lightbox-title"></p>
+            <p id="lightbox-category" class="lightbox-subtitle"></p>
+          </div>
+          <div class="photo-actions">
+            <a id="lightbox-download" class="action-button" download>下載</a>
+            <button id="lightbox-share" class="action-button secondary" type="button">分享</button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+
+    <script type="module" src="./app.js?v=20260425b"></script>
+  </body>
+</html>

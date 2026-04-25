@@ -116,33 +116,6 @@ function showNextLightboxItem() {
   showLightboxIndex(currentLightboxIndex + 1);
 }
 
-async function downloadCategory(category) {
-  const items = category.images.filter((item) => item.download);
-  if (!items.length) {
-    window.alert("這個分類目前沒有可下載的照片。");
-    return;
-  }
-
-  window.alert("如果瀏覽器跳出多重下載提示，請選擇允許。");
-
-  for (const [index, item] of items.entries()) {
-    const frame = document.createElement("iframe");
-    frame.src = item.download;
-    frame.title = `${category.name}-${item.filename}`;
-    frame.hidden = true;
-    frame.setAttribute("aria-hidden", "true");
-    document.body.append(frame);
-
-    window.setTimeout(() => {
-      frame.remove();
-    }, 12000);
-
-    if (index < items.length - 1) {
-      await new Promise((resolve) => window.setTimeout(resolve, 900));
-    }
-  }
-}
-
 function createPhotoCard(categoryName, item) {
   const fragment = cardTemplate.content.cloneNode(true);
   const button = fragment.querySelector(".photo-button");
@@ -232,12 +205,8 @@ function renderGallery(data) {
     const title = fragment.querySelector(".category-title");
     title.textContent = category.name;
     fragment.querySelector(".category-count").textContent = `${category.count} 張照片`;
-    const downloadAll = fragment.querySelector('[data-role="download-all"]');
     const grid = fragment.querySelector(".photo-grid");
     const emptyState = fragment.querySelector(".category-empty");
-
-    downloadAll.disabled = category.images.length === 0;
-    downloadAll.addEventListener("click", () => downloadCategory(category));
 
     for (const item of category.images) {
       const photoItem = { ...item, category: category.name };

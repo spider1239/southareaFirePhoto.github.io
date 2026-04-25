@@ -3384,7 +3384,7 @@ window.__GALLERY_DATA__ = {
           "name": "團舞演出_趙様造具團舞-6",
           "filename": "團舞演出_趙様造具團舞-6.jpg",
           "src": "https://lh3.googleusercontent.com/d/1VWLoxf289j3ZuIFLhdp4twi7XPXzwWY2=w4000",
-          "previewSrc": "src/團舞演出_趙様造具團舞/縮略圖/團舞演出_趙様造具團舞-6.jpg?v=1777048057973112822-265432",
+          "previewSrc": "src/團舞演出_趙様造具團舞/縮略圖/團舞演出_趙様造具團舞-6.jpg?v=1777123085168537590-369971",
           "download": "https://drive.google.com/uc?export=download&id=1VWLoxf289j3ZuIFLhdp4twi7XPXzwWY2",
           "shareUrl": "https://drive.google.com/file/d/1VWLoxf289j3ZuIFLhdp4twi7XPXzwWY2/view"
         },

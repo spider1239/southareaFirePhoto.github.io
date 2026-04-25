@@ -13,6 +13,7 @@ const lightboxDownload = document.querySelector("#lightbox-download");
 const lightboxShare = document.querySelector("#lightbox-share");
 const lightboxPrev = document.querySelector("#lightbox-prev");
 const lightboxNext = document.querySelector("#lightbox-next");
+const scrollToTopButton = document.querySelector("#scroll-to-top");
 
 let currentLightboxItem = null;
 let currentLightboxIndex = -1;
@@ -122,18 +123,22 @@ async function downloadCategory(category) {
     return;
   }
 
+  window.alert("如果瀏覽器跳出多重下載提示，請選擇允許。");
+
   for (const [index, item] of items.entries()) {
-    const anchor = document.createElement("a");
-    anchor.href = item.download;
-    anchor.download = item.filename;
-    anchor.rel = "noreferrer";
-    anchor.style.display = "none";
-    document.body.append(anchor);
-    anchor.click();
-    anchor.remove();
+    const frame = document.createElement("iframe");
+    frame.src = item.download;
+    frame.title = `${category.name}-${item.filename}`;
+    frame.hidden = true;
+    frame.setAttribute("aria-hidden", "true");
+    document.body.append(frame);
+
+    window.setTimeout(() => {
+      frame.remove();
+    }, 12000);
 
     if (index < items.length - 1) {
-      await new Promise((resolve) => window.setTimeout(resolve, 180));
+      await new Promise((resolve) => window.setTimeout(resolve, 900));
     }
   }
 }
@@ -286,6 +291,20 @@ lightboxImage.addEventListener("touchend", (event) => {
     showNextLightboxItem();
   }
 }, { passive: true });
+
+function syncScrollToTopButton() {
+  if (!scrollToTopButton) {
+    return;
+  }
+  scrollToTopButton.classList.toggle("is-visible", window.scrollY > 320);
+}
+
+scrollToTopButton?.addEventListener("click", () => {
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+window.addEventListener("scroll", syncScrollToTopButton, { passive: true });
+syncScrollToTopButton();
 
 loadGallery()
   .then(renderGallery)

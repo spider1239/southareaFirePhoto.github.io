@@ -4,6 +4,7 @@ const gallerySummary = document.querySelector("#gallery-summary");
 const categoryNav = document.querySelector("#category-nav");
 const categoryTemplate = document.querySelector("#category-template");
 const cardTemplate = document.querySelector("#card-template");
+const sideNavPanel = document.querySelector(".side-nav-panel");
 const lightbox = document.querySelector("#lightbox");
 const lightboxImage = document.querySelector("#lightbox-image");
 const lightboxTitle = document.querySelector("#lightbox-title");
@@ -28,6 +29,10 @@ async function loadGallery() {
 
 function absoluteUrl(relativePath) {
   return new URL(relativePath, window.location.href).toString();
+}
+
+function isMobileViewport() {
+  return window.matchMedia("(max-width: 720px)").matches;
 }
 
 async function sharePhoto(item) {
@@ -126,6 +131,11 @@ function renderCategoryNav(categories) {
       link.className = "category-nav-link";
       link.href = `#${slugifyCategoryName(category.name)}`;
       link.textContent = category.name;
+      link.addEventListener("click", () => {
+        if (sideNavPanel && isMobileViewport()) {
+          sideNavPanel.open = false;
+        }
+      });
       links.append(link);
     }
 

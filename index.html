@@ -10,16 +10,21 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Outfit:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./public/styles.css?v=20260425b" />
+    <link rel="stylesheet" href="./public/styles.css?v=20260425e" />
   </head>
   <body>
     <div class="page-shell">
       <aside class="side-nav" aria-label="照片分類導覽">
-        <div class="side-nav-panel">
-          <p class="side-nav-eyebrow">Quick Jump</p>
-          <h2 class="side-nav-title">分類列表</h2>
+        <details class="side-nav-panel" open>
+          <summary class="side-nav-summary">
+            <div>
+              <p class="side-nav-eyebrow">Quick Jump</p>
+              <h2 class="side-nav-title">分類列表</h2>
+            </div>
+            <span class="side-nav-summary-icon" aria-hidden="true"></span>
+          </summary>
           <nav id="category-nav" class="category-nav"></nav>
-        </div>
+        </details>
       </aside>
 
       <div class="content-shell">
@@ -79,6 +84,6 @@
       </form>
     </dialog>
 
-    <script type="module" src="./public/app.js?v=20260425b"></script>
+    <script type="module" src="./public/app.js?v=20260425e"></script>
   </body>
 </html>

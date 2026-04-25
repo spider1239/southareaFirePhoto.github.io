@@ -10,7 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700&family=Outfit:wght@300;400;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./public/styles.css?v=20260425h" />
+    <link rel="stylesheet" href="./public/styles.css?v=20260425k" />
   </head>
   <body>
     <div class="page-shell">
@@ -31,8 +31,25 @@
         <header class="hero">
           <div class="hero-copy">
             <p class="eyebrow">Photo Gallery</p>
-            <h1 id="gallery-title">成品相簿</h1>
+            <h1 id="gallery-title">南區小火照片 by.許晉豪</h1>
             <p class="hero-text" id="gallery-summary">正在載入照片分類...</p>
+            <a
+              class="social-link"
+              href="https://www.instagram.com/pro_spihao1239/"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram @pro_spihao1239"
+            >
+              <span class="social-link-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" role="img" focusable="false">
+                  <path
+                    d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.75A4 4 0 0 0 3.75 7.75v8.5a4 4 0 0 0 4 4h8.5a4 4 0 0 0 4-4v-8.5a4 4 0 0 0-4-4h-8.5Zm8.9 1.35a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.75A3.25 3.25 0 1 0 12 15.25 3.25 3.25 0 0 0 12 8.75Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+              <span class="social-link-label">@pro_spihao1239</span>
+            </a>
           </div>
         </header>
         <main id="gallery-root" class="gallery-root" aria-live="polite"></main>
@@ -46,6 +63,9 @@
             <h2 class="category-title"></h2>
             <p class="category-count"></p>
           </div>
+          <button class="category-download-button" type="button" data-role="download-all">
+            全部下載
+          </button>
         </div>
         <div class="photo-grid"></div>
         <p class="category-empty" hidden>目前尚未放入照片。</p>
@@ -70,6 +90,8 @@
     <dialog id="lightbox" class="lightbox">
       <form method="dialog" class="lightbox-panel">
         <button class="lightbox-close" type="submit" aria-label="關閉">×</button>
+        <button id="lightbox-prev" class="lightbox-nav lightbox-nav-prev" type="button" aria-label="上一張">‹</button>
+        <button id="lightbox-next" class="lightbox-nav lightbox-nav-next" type="button" aria-label="下一張">›</button>
         <img id="lightbox-image" class="lightbox-image" alt="" />
         <div class="lightbox-footer">
           <div>
@@ -84,6 +106,7 @@
       </form>
     </dialog>
 
-    <script type="module" src="./public/app.js?v=20260425h"></script>
+    <script src="./gallery-data.js?v=20260425k"></script>
+    <script type="module" src="./public/app.js?v=20260425k"></script>
   </body>
 </html>

@@ -11,8 +11,13 @@ const lightboxTitle = document.querySelector("#lightbox-title");
 const lightboxCategory = document.querySelector("#lightbox-category");
 const lightboxDownload = document.querySelector("#lightbox-download");
 const lightboxShare = document.querySelector("#lightbox-share");
+const lightboxPrev = document.querySelector("#lightbox-prev");
+const lightboxNext = document.querySelector("#lightbox-next");
 
 let currentLightboxItem = null;
+let currentLightboxIndex = -1;
+let lightboxItems = [];
+let lightboxTouchStartX = 0;
 const navGroupOrder = ["新人組", "公開組", "團舞", "其他"];
 
 function slugifyCategoryName(name) {
@@ -20,11 +25,24 @@ function slugifyCategoryName(name) {
 }
 
 async function loadGallery() {
-  const response = await fetch(`./gallery-data.json?ts=${Date.now()}`);
-  if (!response.ok) {
-    throw new Error("無法讀取相簿資料");
+  const embeddedGallery = window.__GALLERY_DATA__;
+
+  if (window.location.protocol === "file:" && embeddedGallery) {
+    return embeddedGallery;
   }
-  return response.json();
+
+  try {
+    const response = await fetch(`./gallery-data.json?ts=${Date.now()}`);
+    if (!response.ok) {
+      throw new Error("無法讀取相簿資料");
+    }
+    return response.json();
+  } catch (error) {
+    if (embeddedGallery) {
+      return embeddedGallery;
+    }
+    throw error;
+  }
 }
 
 function absoluteUrl(relativePath) {
@@ -33,6 +51,29 @@ function absoluteUrl(relativePath) {
 
 function isMobileViewport() {
   return window.matchMedia("(max-width: 720px)").matches;
+}
+
+function updateLightbox(item) {
+  currentLightboxItem = item;
+  lightboxImage.src = item.src;
+  lightboxImage.alt = item.name;
+  lightboxTitle.textContent = item.name;
+  lightboxCategory.textContent = item.category;
+  lightboxDownload.href = item.download;
+  lightboxDownload.download = item.filename;
+  lightboxShare.dataset.src = item.src;
+
+  const hasMultiple = lightboxItems.length > 1;
+  lightboxPrev.hidden = !hasMultiple;
+  lightboxNext.hidden = !hasMultiple;
+}
+
+function showLightboxIndex(index) {
+  if (!lightboxItems.length) {
+    return;
+  }
+  currentLightboxIndex = (index + lightboxItems.length) % lightboxItems.length;
+  updateLightbox(lightboxItems[currentLightboxIndex]);
 }
 
 async function sharePhoto(item) {
@@ -61,15 +102,40 @@ async function sharePhoto(item) {
 }
 
 function openLightbox(item) {
-  currentLightboxItem = item;
-  lightboxImage.src = item.src;
-  lightboxImage.alt = item.name;
-  lightboxTitle.textContent = item.name;
-  lightboxCategory.textContent = item.category;
-  lightboxDownload.href = item.download;
-  lightboxDownload.download = item.filename;
-  lightboxShare.dataset.src = item.src;
+  const index = lightboxItems.findIndex((candidate) => candidate.src === item.src && candidate.filename === item.filename);
+  showLightboxIndex(index === -1 ? 0 : index);
   lightbox.showModal();
+}
+
+function showPreviousLightboxItem() {
+  showLightboxIndex(currentLightboxIndex - 1);
+}
+
+function showNextLightboxItem() {
+  showLightboxIndex(currentLightboxIndex + 1);
+}
+
+async function downloadCategory(category) {
+  const items = category.images.filter((item) => item.download);
+  if (!items.length) {
+    window.alert("這個分類目前沒有可下載的照片。");
+    return;
+  }
+
+  for (const [index, item] of items.entries()) {
+    const anchor = document.createElement("a");
+    anchor.href = item.download;
+    anchor.download = item.filename;
+    anchor.rel = "noreferrer";
+    anchor.style.display = "none";
+    document.body.append(anchor);
+    anchor.click();
+    anchor.remove();
+
+    if (index < items.length - 1) {
+      await new Promise((resolve) => window.setTimeout(resolve, 180));
+    }
+  }
 }
 
 function createPhotoCard(categoryName, item) {
@@ -147,9 +213,10 @@ function renderCategoryNav(categories) {
 }
 
 function renderGallery(data) {
-  galleryTitle.textContent = `${data.title} 相簿`;
-  gallerySummary.textContent = `共 ${data.categoryCount} 個分類，${data.imageCount} 張照片。可直接預覽、下載或分享單張照片。`;
+  galleryTitle.textContent = "南區小火照片 by.許晉豪";
+  gallerySummary.textContent = `共 ${data.categoryCount} 個分類，${data.imageCount} 張照片。可直接預覽、下載或分享單張照片。使用圖片請標註攝影師 @pro_spihao1239。`;
   renderCategoryNav(data.categories);
+  lightboxItems = [];
 
   const content = document.createDocumentFragment();
 
@@ -160,11 +227,17 @@ function renderGallery(data) {
     const title = fragment.querySelector(".category-title");
     title.textContent = category.name;
     fragment.querySelector(".category-count").textContent = `${category.count} 張照片`;
+    const downloadAll = fragment.querySelector('[data-role="download-all"]');
     const grid = fragment.querySelector(".photo-grid");
     const emptyState = fragment.querySelector(".category-empty");
 
+    downloadAll.disabled = category.images.length === 0;
+    downloadAll.addEventListener("click", () => downloadCategory(category));
+
     for (const item of category.images) {
-      grid.append(createPhotoCard(category.name, item));
+      const photoItem = { ...item, category: category.name };
+      lightboxItems.push(photoItem);
+      grid.append(createPhotoCard(category.name, photoItem));
     }
 
     emptyState.hidden = category.images.length > 0;
@@ -180,6 +253,39 @@ lightboxShare.addEventListener("click", () => {
     sharePhoto(currentLightboxItem);
   }
 });
+
+lightboxPrev.addEventListener("click", showPreviousLightboxItem);
+lightboxNext.addEventListener("click", showNextLightboxItem);
+
+lightbox.addEventListener("keydown", (event) => {
+  if (!lightbox.open) {
+    return;
+  }
+  if (event.key === "ArrowLeft") {
+    event.preventDefault();
+    showPreviousLightboxItem();
+  } else if (event.key === "ArrowRight") {
+    event.preventDefault();
+    showNextLightboxItem();
+  }
+});
+
+lightboxImage.addEventListener("touchstart", (event) => {
+  lightboxTouchStartX = event.changedTouches[0]?.clientX ?? 0;
+}, { passive: true });
+
+lightboxImage.addEventListener("touchend", (event) => {
+  const touchEndX = event.changedTouches[0]?.clientX ?? 0;
+  const deltaX = touchEndX - lightboxTouchStartX;
+  if (Math.abs(deltaX) < 40) {
+    return;
+  }
+  if (deltaX > 0) {
+    showPreviousLightboxItem();
+  } else {
+    showNextLightboxItem();
+  }
+}, { passive: true });
 
 loadGallery()
   .then(renderGallery)

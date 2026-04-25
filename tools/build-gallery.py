@@ -9,6 +9,7 @@ from pathlib import Path
 SITE_DIR = Path(__file__).resolve().parent.parent
 SOURCE_DIR = SITE_DIR / "src"
 OUTPUT_JSON = SITE_DIR / "gallery-data.json"
+OUTPUT_JS = SITE_DIR / "gallery-data.js"
 DRIVE_FILE_MAP = SITE_DIR / "drive-file-map.json"
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 THUMBNAIL_DIR_NAME = "縮略圖"
@@ -141,8 +142,10 @@ def build_manifest() -> dict:
 
 def main() -> None:
     manifest = build_manifest()
-    OUTPUT_JSON.write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+    manifest_json = json.dumps(manifest, ensure_ascii=False, indent=2)
+    OUTPUT_JSON.write_text(manifest_json + "\n", encoding="utf-8")
+    OUTPUT_JS.write_text(
+        f"window.__GALLERY_DATA__ = {manifest_json};\n",
         encoding="utf-8",
     )
     print(f"Built gallery with {manifest['imageCount']} images across {manifest['categoryCount']} categories.")

@@ -192,7 +192,7 @@ function renderCategoryNav(categories) {
 
 function renderGallery(data) {
   galleryTitle.textContent = "南區小火照片 by.許晉豪";
-  gallerySummary.textContent = `共 ${data.categoryCount} 個分類，${data.imageCount} 張照片。可直接預覽、下載或分享單張照片。使用圖片請標註攝影師 @pro_spihao1239。`;
+  gallerySummary.textContent = `使用圖片請標註攝影師 @pro_spihao1239。`;
   renderCategoryNav(data.categories);
   lightboxItems = [];
 

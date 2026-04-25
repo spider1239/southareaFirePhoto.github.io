@@ -1,6 +1,5 @@
 window.__GALLERY_DATA__ = {
   "title": "src",
-  "source": "/Users/user/Documents/Codex/2026-04-19-finder-plugin-computer-use-openai-bundled/gallery-site/src",
   "categoryCount": 38,
   "imageCount": 412,
   "categories": [

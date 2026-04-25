@@ -133,7 +133,6 @@ def build_manifest() -> dict:
 
     return {
         "title": SOURCE_DIR.name,
-        "source": str(SOURCE_DIR),
         "categoryCount": len(categories),
         "imageCount": sum(category["count"] for category in categories),
         "categories": categories,
